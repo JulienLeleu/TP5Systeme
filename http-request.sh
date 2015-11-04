@@ -33,9 +33,11 @@ rediriger () {
 	if test $chaine == "contenu"
 	then
 		chemin=$( echo $1 | sed -e 's/\/contenu\///1')
+		#Si le contenu est un fichier régulier
 		if test -f $CHEMIN1/$chemin
 		then
 			echo $(cat -e $CHEMIN1/$chemin)
+		#Si le contenu est un dossier
 		elif test -d $CHEMIN1/$chemin
 		then
 			echo "Erreur 406"
@@ -46,15 +48,19 @@ rediriger () {
 	elif test $chaine == "html"
 	then
 		chemin=$( echo $1 | sed -e 's/\/html\///1')
+		#Si le fichier est un CSV
 		if ! test -z $(echo $1 | egrep -o .csv$)
 		then
 			cat $CHEMIN1/$chemin | ./csv2html.sh
+		#Si le fichier est un fichier texte
 		elif ! test -z $(echo $1 | egrep -o .txt$)
 		then
 			./txt2html.sh $CHEMIN1/$chemin
+		#Si le fichier est un repertoire
 		elif test -d $CHEMIN1/$chemin
 		then
 			./dossier2html.sh $CHEMIN1/$chemin
+		#Si le fichier existe
 		elif test -e $CHEMIN1/$chemin
 		then
 			echo "Erreur 406: Type de fichier inconnu"
