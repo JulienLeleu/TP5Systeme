@@ -9,15 +9,15 @@ findOption () {
 valeursParDefaut () {
 	if test -z $PORT
 	then
-		PORT=8080;
+		export PORT=8080;
 	fi
 	if test -z $CHEMIN1
 	then
-		CHEMIN1=$HOME/public_html
+		export CHEMIN1=$HOME/public_html
 	fi
 	if test -z $CHEMIN2
 	then
-		CHEMIN2=$HOME/modeles_html
+		export CHEMIN2=$HOME/modeles_html
 	fi
 }
 
@@ -33,16 +33,16 @@ decompte () {
 
 demarrerServeur () {
 	echo -n "Démarrage du serveur "
-	decompte
+	#decompte
 	echo
 	echo "Serveur lancé sur le port $PORT"
 	echo "Lecture des fichiers depuis : $CHEMIN1"
 	echo "Modele HTML : $CHEMIN2"
 }
 
-PORT=$(findOption "-p" $*)
-CHEMIN1=$(findOption "-d" $*) #dossier dans lesquels se trouves les fichiers HTML
-CHEMIN2=$(findOption "-t" $*) #fichier contenant les modeles pour traduire les fichiers non HTML
+export PORT=$(findOption "-p" $*)
+export CHEMIN1=$(findOption "-d" $*) #dossier dans lesquels se trouves les fichiers HTML
+export CHEMIN2=$(findOption "-t" $*) #fichier contenant les modeles pour traduire les fichiers non HTML
 
 valeursParDefaut
 demarrerServeur
@@ -54,5 +54,5 @@ mkfifo $tube 2> /dev/null
 
 while true
 do
-	cat $tube | ./process-request.sh | nc -p $PORT -l > $tube
+	cat $tube | ./http-request.sh | nc -p $PORT -l > $tube
 done
