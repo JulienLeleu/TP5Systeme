@@ -1,0 +1,6 @@
+une ligne
+--DEBUT_REMPLACEMENT--
+une autre ligne
+suivi encore d'une autre
+--FIN_REMPLACEMENT--
+la dernière ligne

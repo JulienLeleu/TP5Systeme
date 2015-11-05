@@ -19,7 +19,7 @@ triepar () {
 	optionDeTri=$2
 	if test -e $CHEMIN1/$fichier
 	then
-		if [ ! -z $(echo $1 | egrep -o .csv$) ]
+		if ! test -z $(echo $1 | egrep -o .csv$)
 		then
 			if let $optionDeTri
 			then
