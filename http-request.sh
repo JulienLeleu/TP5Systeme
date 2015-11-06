@@ -14,6 +14,7 @@ verifChaine () {
 	echo $@ | egrep "^GET .* HTTP/1.1$"
 }
 
+#trie les csv par colonnes
 triepar () {
 	fichier=$1
 	optionDeTri=$2
@@ -46,13 +47,13 @@ messageErreur () {
 	fi
 }
 
-
+#si l'instruction vaut "exit", on sort 
 sortir () {
 	if test $1 = "exit"
 	then
 		echo "ON SORT !!!"
 		continuer=false
-		#exit 
+		#exit
 	fi
 }
 
@@ -63,11 +64,11 @@ rediriger () {
 	then
 		chemin=$( echo $1 | sed -e 's/\/contenu\///1')
 		#Si le contenu est un fichier régulier
-		if test -f $CHEMIN1/$chemin
+		if [ -f $CHEMIN1/$chemin ]
 		then
 			echo $(cat -e $CHEMIN1/$chemin)
 		#Si le contenu est un dossier
-		elif test -d $CHEMIN1/$chemin
+		elif [ -d $CHEMIN1/$chemin ]
 		then
 			echo "Erreur 406 : Le fichier est un dossier"
 			echo "http-request.sh: erreur: $1: 406: Le fichier est un dossier" 1>&2
@@ -89,7 +90,7 @@ rediriger () {
 		#Si le fichier est un fichier texte
 		elif [ -e $CHEMIN1/$chemin ] && [ ! -z $(echo $1 | egrep -o .txt$) ]
 		then
-			./txt2html.sh $CHEMIN1/$chemin
+			./remplace-dans.sh < $CHEMIN1/$chemin $CHEMIN2
 		#Si le fichier est un repertoire
 		elif [ -d $CHEMIN1/$chemin ]
 		then

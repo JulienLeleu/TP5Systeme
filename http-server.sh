@@ -17,7 +17,7 @@ valeursParDefaut () {
 	fi
 	if test -z $CHEMIN2
 	then
-		export CHEMIN2=$HOME/modeles_html
+		export CHEMIN2=$HOME/modeles_html/modele.html
 	fi
 }
 
