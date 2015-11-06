@@ -18,15 +18,17 @@ verifChaine () {
 triepar () {
 	fichier=$1
 	optionDeTri=$2
-	if test -e $CHEMIN1/$fichier
+	if [ -e $CHEMIN1/$fichier ]
 	then
 		if [ ! -z $(echo $1 | egrep -o .csv$) ]
 		then
 			if let $optionDeTri
 			then
 				cat $CHEMIN1/$fichier | ./csv2html.sh -s$optionDeTri
+				echo "http-request.sh: info: $1: 200: Affichage du fichier CSV en HTML trié par numéro de colonne" 1>&2
 			else
 				cat $CHEMIN1/$fichier | ./csv2html.sh -S$optionDeTri
+				echo "http-request.sh: info: $1: 200: Affichage du fichier CSV en HTML trié par nom de colonne" 1>&2
 			fi
 		else
 			echo "Erreur 406: Cible non acceptable"
@@ -52,6 +54,7 @@ sortir () {
 	if test $1 = "exit"
 	then
 		echo "ON SORT !!!"
+		#echo "http-request.sh: info: $1: 200: Deconnexion du client" 1>&2
 		continuer=false
 		#exit
 	fi
@@ -67,6 +70,7 @@ rediriger () {
 		if [ -f $CHEMIN1/$chemin ]
 		then
 			echo $(cat -e $CHEMIN1/$chemin)
+			echo "http-request.sh: info: $1: 200: Affichage du contenu du fichier" 1>&2
 		#Si le contenu est un dossier
 		elif [ -d $CHEMIN1/$chemin ]
 		then
@@ -87,15 +91,18 @@ rediriger () {
 		elif [ -e $CHEMIN1/$chemin ] && [ ! -z $(echo $1 | egrep -o .csv$) ]
 		then
 			cat $CHEMIN1/$chemin | ./csv2html.sh
+			echo "http-request.sh: info: $1: 200: Affichage du fichier CSV en HTML" 1>&2
 		#Si le fichier est un fichier texte
 		elif [ -e $CHEMIN1/$chemin ] && [ ! -z $(echo $1 | egrep -o .txt$) ]
 		then
 			./remplace-dans.sh < $CHEMIN1/$chemin $CHEMIN2
+			echo "http-request.sh: info: $1: 200: Affichage du fichier texte en HTML" 1>&2
 		#Si le fichier est un repertoire
 		elif [ -d $CHEMIN1/$chemin ]
 		then
 			./dossier2html.sh $CHEMIN1/$chemin
-		#Si le fichier existe
+			echo "http-request.sh: info: $1: 200: Affichage du dossier en HTML" 1>&2
+		#Si le fichier existe quand même
 		elif [ -e $CHEMIN1/$chemin ]
 		then
 			echo "Erreur 406: Type de fichier inconnu"
@@ -114,6 +121,7 @@ afficherContenu () {
 	fi
 }
 
+#corps du programme
 while $continuer
 do
 	read chaineRecu
