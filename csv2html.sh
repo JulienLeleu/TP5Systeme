@@ -1,34 +1,35 @@
 #!/bin/bash
 
-delimiteur=';';
-tri=1;
+DELIM=';'
+NUMCOL="1";
 
-#On parcours la liste des arguments passés en paramètre
+read HEAD;
+
 for i in $@
 do
 	case ${i} in
 		-d?)					#Option pour le délimiteur
-			delimiteur=${i:2};
+			DELIM=${i:2};
 		;;
 		-s*)					#Option pour le tri par numero de colonne
-			tri=${i:2};
+			NUMCOL=${i:2};
 		;;
 		-S*)					#Option pour le tri par nom de colonne
-			tri=$(head -n 1 | tr ";" "\n" | grep ${i:2} -n | cut -d: -f1);		#retourne le numero de colonne dans tri
+			NUMCOL=$(echo $HEAD | tr ";" $"\n" | grep ${i:2} -n | cut -d: -f1)
 		;;
 	esac
 done
 
-i=0;
 echo "<table>";
-(head -n 1 && tail -n +2 | sort -t$delimiteur -k$tri) | while read line		#Entree standard avec entête fixe
-do
-	if ((i==0))
-    then
-    	echo '<tr><th>'$line'</th></tr>' | (sed s/$delimiteur/'<\/th><th>'/g)
-		i=$(($i+1));
-    else
-		echo '<tr><td>'$line'</td></tr>' | (sed s/$delimiteur/'<\/td><td>'/g)
-    fi
-done
+echo -e "\t<tr>"
+echo -e "\t\t<th>$HEAD</th>" | sed "s/$DELIM/<\/th><th>/g";
+echo -e "\t</tr>";
+
+cat | while IFS=$'\n' read -a Array
+do 
+	echo "${Array[@]}"
+done | sort -t';' -k$NUMCOL | sed -r -s "s/(.*)/\t<tr>\n\t\t<td>\1<\/td>\n\t<\/tr>/g" | sed "s/$DELIM/<\/td><td>/g"
+
 echo "</table>";
+
+IFS=' ';

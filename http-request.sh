@@ -54,7 +54,7 @@ sortir () {
 	if test $1 = "exit"
 	then
 		echo "ON SORT !!!"
-		#echo "http-request.sh: info: $1: 200: Deconnexion du client" 1>&2
+		echo "http-request.sh: info: $1: 200: Deconnexion du client" 1>&2
 		continuer=false
 		#exit
 	fi
